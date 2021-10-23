@@ -1,10 +1,5 @@
 <resources>
-    <string name="name">Karim</string>
-    <string name="phone_number">+79124567634</string>
-    <string name="second_phone_number">+79125678643</string>
-    <string name="mail">karim@mail.ru</string>
-    <string name="second_mail">karim2@yandex.ru</string>
-    <string name="description">Gabbasov Karim Ramilevich</string>
+    <string name="app_name">65apps</string>
     <string name="contact_list_fragment_title">Список контактов</string>
     <string name="contact_detail_fragment_title">Детали контактов</string>
 </resources>
