@@ -1,4 +1,4 @@
-package com.karimgabbasov.a65apps
+package com.karimgabbasov.a65apps.ui
 
 import android.content.Context
 import android.os.Bundle
@@ -6,22 +6,27 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.karimgabbasov.a65apps.ContactService
+import com.karimgabbasov.a65apps.FragmentOwner
+import com.karimgabbasov.a65apps.R
+import com.karimgabbasov.a65apps.ServiceOwner
+import com.karimgabbasov.a65apps.data.ContactsModel
 import com.karimgabbasov.a65apps.databinding.FragmentContactListBinding
+import java.lang.ref.WeakReference
 
 private const val CONTACT_ID = "id"
 
 class ContactListFragment : Fragment() {
-
     private var fragmentOwner: FragmentOwner? = null
-    private var contactCell: RelativeLayout? = null
     private var _binding: FragmentContactListBinding? = null
     private val binding get() = _binding!!
+    private var service: ContactService? = null
 
     override fun onAttach(context: Context) {
-        fragmentOwner = context as? FragmentOwner
         super.onAttach(context)
+        fragmentOwner = context as? FragmentOwner
+        service = (context as? ServiceOwner)?.getService()
     }
 
     override fun onCreateView(
@@ -35,8 +40,7 @@ class ContactListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        contactCell = view.findViewById(R.id.contactCell)
-
+        service?.getContacts(WeakReference(this))
         binding.contactCell.root.setOnClickListener {
             fragmentOwner?.setContactDetailsFragment(CONTACT_ID)
         }
@@ -44,13 +48,29 @@ class ContactListFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        contactCell = null
+        _binding = null
         super.onDestroyView()
     }
 
     override fun onDetach() {
         fragmentOwner = null
+        service = null
         super.onDetach()
+    }
+
+    fun setData(data: List<ContactsModel>) {
+        requireActivity().runOnUiThread {
+            binding.contactCell.apply {
+                contactName.text = data.first().firstName
+                phoneNumber.text = data.first().number
+                contactPhoto.setImageResource(data.first().imageResourceId)
+            }
+        }
+    }
+
+    fun getContactData(){
+        val serviceOwner = (context as? ServiceOwner)?.getService()
+        serviceOwner?.getContacts(WeakReference(this))
     }
 
     companion object {

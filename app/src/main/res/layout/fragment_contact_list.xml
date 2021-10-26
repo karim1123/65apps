@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".ContactListFragment">
+    tools:context="com.karimgabbasov.a65apps.ui.ContactListFragment">
 
     <include
         android:id="@+id/contactCell"
