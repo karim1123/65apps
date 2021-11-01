@@ -19,16 +19,24 @@ class MainActivity : AppCompatActivity(), FragmentOwner, ServiceOwner {
             val binder = service as ContactService.LocalBinder
             mService = binder.getService()
             mBound = true
-            val contactListFragment = supportFragmentManager.findFragmentByTag(CONTACT_LIST_FRAGMENT)
-            val contactDetailFragment = supportFragmentManager.findFragmentByTag(CONTACT_DETAIL_FRAGMENT)
+            val contactListFragment =
+                supportFragmentManager.findFragmentByTag(CONTACT_LIST_FRAGMENT)
+            val contactDetailFragment =
+                supportFragmentManager.findFragmentByTag(CONTACT_DETAIL_FRAGMENT)
             if (contactDetailFragment != null) {
                 (contactDetailFragment as ContactDetailFragment)
                     .getContactData()
             } else if (contactListFragment != null) {
-                (contactListFragment as ContactListFragment)
-                    .getContactData()
+                val id = intent.getIntExtra("id", -1)//принимаем id из AlarmReceiver
+                if (id > -1) {
+                    setContactDetailsFragment(id)//переход из уведомления на нужный фрагмент
+                } else {
+                    (contactListFragment as ContactListFragment)
+                        .getContactData()
+                }
             }
         }
+
         override fun onServiceDisconnected(className: ComponentName?) {
             mBound = false
         }
@@ -37,7 +45,7 @@ class MainActivity : AppCompatActivity(), FragmentOwner, ServiceOwner {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             setContactListFragment()
         }
         Intent(this, ContactService::class.java).also { intent ->
@@ -46,7 +54,7 @@ class MainActivity : AppCompatActivity(), FragmentOwner, ServiceOwner {
     }
 
     override fun onDestroy() {
-        if (mBound){
+        if (mBound) {
             mBound = false
             unbindService(serviceConnection)
         }
@@ -62,7 +70,7 @@ class MainActivity : AppCompatActivity(), FragmentOwner, ServiceOwner {
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit()
     }
 
-    override fun setContactDetailsFragment(id: String) {
+    override fun setContactDetailsFragment(id: Int) {
         supportFragmentManager.beginTransaction().replace(
             R.id.fragmentContainer,
             ContactDetailFragment.getNewInstance(id),
@@ -74,7 +82,7 @@ class MainActivity : AppCompatActivity(), FragmentOwner, ServiceOwner {
 
     override fun getService() = mService
 
-    companion object{
+    companion object {
         private const val CONTACT_DETAIL_FRAGMENT = "ContactDetailFragment"
         private const val CONTACT_LIST_FRAGMENT = "ContactListFragment"
     }

@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import com.karimgabbasov.a65apps.ContactService
 import com.karimgabbasov.a65apps.FragmentOwner
 import com.karimgabbasov.a65apps.R
 import com.karimgabbasov.a65apps.ServiceOwner
@@ -15,18 +14,15 @@ import com.karimgabbasov.a65apps.data.ContactsModel
 import com.karimgabbasov.a65apps.databinding.FragmentContactListBinding
 import java.lang.ref.WeakReference
 
-private const val CONTACT_ID = "id"
-
 class ContactListFragment : Fragment() {
     private var fragmentOwner: FragmentOwner? = null
     private var _binding: FragmentContactListBinding? = null
     private val binding get() = _binding!!
-    private var service: ContactService? = null
+    private var contactId: Int = 34
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         fragmentOwner = context as? FragmentOwner
-        service = (context as? ServiceOwner)?.getService()
     }
 
     override fun onCreateView(
@@ -40,9 +36,9 @@ class ContactListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        service?.getContacts(WeakReference(this))
+        getContactData()
         binding.contactCell.root.setOnClickListener {
-            fragmentOwner?.setContactDetailsFragment(CONTACT_ID)
+            fragmentOwner?.setContactDetailsFragment(contactId)
         }
         (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.contact_list_fragment_title)
     }
@@ -54,7 +50,6 @@ class ContactListFragment : Fragment() {
 
     override fun onDetach() {
         fragmentOwner = null
-        service = null
         super.onDetach()
     }
 
