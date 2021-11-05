@@ -9,5 +9,6 @@ data class DetailedContactModel(
     val mail: String,
     val secondMail: String,
     val description: String,
+    val birthday: String,
     @DrawableRes val imageResourceId: Int
 )

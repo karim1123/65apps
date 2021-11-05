@@ -39,6 +39,7 @@ class ContactService : Service() {
                     mail = "karim@mail.ru",
                     secondMail = "karim2@yandex.ru",
                     description = "Gabbasov Karim Ramilevich",
+                    birthday = "29-11-2000",
                     imageResourceId = R.drawable.first_contact_photo))
             )
         }

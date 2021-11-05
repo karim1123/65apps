@@ -10,6 +10,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.65apps">
         <service android:name=".ContactService"/>
+        <receiver
+            android:name=".AlarmReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.karimgabbasov.a65apps"/>
+            </intent-filter>
+        </receiver>
         <activity
             android:name=".ui.MainActivity"
             android:exported="true">
