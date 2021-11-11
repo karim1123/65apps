@@ -1,6 +1,6 @@
 package com.karimgabbasov.a65apps
 
 interface FragmentOwner {
-    fun setContactDetailsFragment(id: Int)
+    fun setContactDetailsFragment(id: String)
     fun setContactListFragment()
 }

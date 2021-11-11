@@ -1,5 +1,6 @@
 package com.karimgabbasov.a65apps.ui
 
+import android.Manifest
 import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -8,14 +9,18 @@ import android.content.Context
 import android.content.Context.ALARM_SERVICE
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import com.karimgabbasov.a65apps.*
 import com.karimgabbasov.a65apps.data.DetailedContactModel
 import com.karimgabbasov.a65apps.databinding.FragmentContactDetailBinding
@@ -26,8 +31,27 @@ class ContactDetailFragment : Fragment() {
     private var _binding: FragmentContactDetailBinding? = null
     private val binding get() = _binding!!
     private var contactName: String? = null
-    private var contactId: Int? = null
+    private lateinit var contactId: String
     private var contactBirthday: String? = null
+    private val readContactsPermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            when {
+                granted -> {
+                    // user granted permission
+                    service?.getDetailContact(WeakReference(this),requireContext(), contactId)
+                }
+                ActivityCompat.shouldShowRequestPermissionRationale(
+                    requireActivity(),
+                    Manifest.permission.READ_CONTACTS
+                ) -> {
+                    // user denied permission and set Don't ask again.
+                    showRationaleDialog()
+                }
+                else -> {
+                    Toast.makeText(context, R.string.denied_toast, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -49,8 +73,8 @@ class ContactDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        contactId = arguments?.getInt(ARGUMENT_ID)
-        service?.getDetailContact(WeakReference(this))
+        contactId = arguments?.getString(ARGUMENT_ID)!!
+        requestPermission()
         switchChecked() //проверка состояния switch
         binding.switchNotification.setOnClickListener { //обработка нажатий switch
             if (binding.switchNotification.isChecked) {
@@ -76,23 +100,25 @@ class ContactDetailFragment : Fragment() {
     fun setData(data: List<DetailedContactModel>) {
         requireActivity().runOnUiThread {
             binding.apply {
-                contactName.text = data.first().firstName
+                contactName.text = data.first().name
                 phoneNumber.text = data.first().number
                 secondPhoneNumber.text = data.first().secondPhoneNumber
                 mail.text = data.first().mail
                 secondMail.text = data.first().secondMail
                 description.text = data.first().description
                 birthday.text = data.first().birthday
-                contactPhoto.setImageResource(data.first().imageResourceId)
+                if (data.first().image != null){
+                    contactPhoto.setImageURI(Uri.parse(data.first().image))
+                }
             }
-            contactName = data.first().firstName
+            contactName = data.first().name
             contactBirthday = data.first().birthday
         }
     }
 
     fun getContactData() {
         val serviceOwner = (context as? ServiceOwner)?.getService()
-        serviceOwner?.getDetailContact(WeakReference(this))
+        serviceOwner?.getDetailContact(WeakReference(this), requireContext(), contactId)
     }
 
     private fun createChannel(channelId: String, channelName: String) {
@@ -117,7 +143,8 @@ class ContactDetailFragment : Fragment() {
     }
 
     private fun setupAlarm() { //функция для вызова alarm manager
-        val alrmMgr: AlarmManager? = requireContext().getSystemService(ALARM_SERVICE) as? AlarmManager
+        val alrmMgr: AlarmManager? =
+            requireContext().getSystemService(ALARM_SERVICE) as? AlarmManager
         val notificationBody = "Today $contactName birthday!"
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             putExtra("name", notificationBody)
@@ -125,10 +152,13 @@ class ContactDetailFragment : Fragment() {
             putExtra("date", contactBirthday)
         }
         val existingIntent =
-            PendingIntent.getBroadcast(context, contactId!!, intent, PendingIntent.FLAG_NO_CREATE)
+            PendingIntent.getBroadcast(context,
+                contactId.toInt(),
+                intent,
+                PendingIntent.FLAG_NO_CREATE)
         if (existingIntent == null) {
             val alarmIntent = PendingIntent.getBroadcast(context,
-                contactId!!,
+                contactId.toInt(),
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT)
             val timeBeforeBirthdayInMills: Long = contactBirthday.countMills()
@@ -141,7 +171,7 @@ class ContactDetailFragment : Fragment() {
     private fun cancelAlarm() { //функция для отмены alarm manager
         val alrmMgr: AlarmManager? = null
         val intent = Intent(context, AlarmReceiver::class.java)
-        val alarmIntent = PendingIntent.getBroadcast(context, contactId!!, intent, 0)
+        val alarmIntent = PendingIntent.getBroadcast(context, contactId.toInt(), intent, 0)
         alrmMgr?.cancel(alarmIntent)
         alarmIntent.cancel()
     }
@@ -149,13 +179,25 @@ class ContactDetailFragment : Fragment() {
     private fun switchChecked() { //функция для проверки состояни switch
         val intent = Intent(context, AlarmReceiver::class.java)
         val existingIntent =
-            PendingIntent.getBroadcast(context, contactId!!, intent, PendingIntent.FLAG_NO_CREATE)
+            PendingIntent.getBroadcast(context,
+                contactId.toInt(),
+                intent,
+                PendingIntent.FLAG_NO_CREATE)
         binding.switchNotification.isChecked = existingIntent != null
+    }
+
+    private fun showRationaleDialog() {
+        RationaleRequestPermissionFragment().show(parentFragmentManager,
+            RationaleRequestPermissionFragment.TAG)
+    }
+
+    fun requestPermission() {
+        readContactsPermission.launch(Manifest.permission.READ_CONTACTS)
     }
 
     companion object {
         private const val ARGUMENT_ID = "id"
-        fun getNewInstance(id: Int): ContactDetailFragment =
+        fun getNewInstance(id: String): ContactDetailFragment =
             ContactDetailFragment().apply {
                 arguments = bundleOf(
                     ARGUMENT_ID to id

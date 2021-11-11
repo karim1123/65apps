@@ -8,4 +8,8 @@
     <string name="today_birthday">today x birthday</string>
     <string name="off">Off</string>
     <string name="on">On</string>
+    <string name="denied_toast">Доступ запрещен</string>
+    <string name="contacts_rationale_title">Разрешить доступ к контакам?</string>
+    <string name="contacts_rationale_text">Для корректной работы приложения требуется доступ к контактам.\nВы сможете отозвать доступ через меню настроек в любой момент.</string>
+    <string name="contacts_rationale_button">Разрешить</string>
 </resources>
