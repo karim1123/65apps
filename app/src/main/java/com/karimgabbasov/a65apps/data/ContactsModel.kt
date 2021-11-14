@@ -1,10 +1,9 @@
 package com.karimgabbasov.a65apps.data
 
-import androidx.annotation.DrawableRes
-
 data class ContactsModel(
-    val firstName: String,
+    val id: String,
+    val name: String,
     val number: String,
-    @DrawableRes val imageResourceId: Int,
+    val image: String?
 )
 

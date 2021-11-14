@@ -4,11 +4,14 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
-import com.karimgabbasov.a65apps.*
+import com.karimgabbasov.a65apps.ContactService
+import com.karimgabbasov.a65apps.FragmentOwner
+import com.karimgabbasov.a65apps.R
+import com.karimgabbasov.a65apps.ServiceOwner
 
 class MainActivity : AppCompatActivity(), FragmentOwner, ServiceOwner {
     private var mService: ContactService? = null
@@ -27,8 +30,8 @@ class MainActivity : AppCompatActivity(), FragmentOwner, ServiceOwner {
                 (contactDetailFragment as ContactDetailFragment)
                     .getContactData()
             } else if (contactListFragment != null) {
-                val id = intent.getIntExtra("id", -1)//принимаем id из AlarmReceiver
-                if (id > -1) {
+                val id: String? = intent.getStringExtra("id")//принимаем id из AlarmReceiver
+                if (id != null) {
                     setContactDetailsFragment(id)//переход из уведомления на нужный фрагмент
                 } else {
                     (contactListFragment as ContactListFragment)
@@ -70,7 +73,7 @@ class MainActivity : AppCompatActivity(), FragmentOwner, ServiceOwner {
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit()
     }
 
-    override fun setContactDetailsFragment(id: Int) {
+    override fun setContactDetailsFragment(id: String) {
         supportFragmentManager.beginTransaction().replace(
             R.id.fragmentContainer,
             ContactDetailFragment.getNewInstance(id),
@@ -83,7 +86,7 @@ class MainActivity : AppCompatActivity(), FragmentOwner, ServiceOwner {
     override fun getService() = mService
 
     companion object {
-        private const val CONTACT_DETAIL_FRAGMENT = "ContactDetailFragment"
-        private const val CONTACT_LIST_FRAGMENT = "ContactListFragment"
+        const val CONTACT_DETAIL_FRAGMENT = "ContactDetailFragment"
+        const val CONTACT_LIST_FRAGMENT = "ContactListFragment"
     }
 }

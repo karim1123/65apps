@@ -5,7 +5,7 @@ import java.util.*
 
 fun String?.countMills(): Long { //функция для рассчета миллисекунд до вызова уведомления
     val calendar = GregorianCalendar.getInstance()
-    calendar.time = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH).parse(this)
+    calendar.time = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(this)
     calendar.set(Calendar.HOUR_OF_DAY, 0)
     calendar.set(Calendar.MINUTE, 0)
     calendar.set(Calendar.SECOND, 0)
