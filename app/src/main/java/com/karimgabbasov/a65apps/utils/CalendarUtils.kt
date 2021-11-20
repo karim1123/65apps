@@ -1,5 +1,6 @@
-package com.karimgabbasov.a65apps
+package com.karimgabbasov.a65apps.utils
 
+import com.karimgabbasov.a65apps.isLeapYear
 import java.text.SimpleDateFormat
 import java.util.*
 

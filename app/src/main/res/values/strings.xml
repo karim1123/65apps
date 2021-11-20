@@ -5,7 +5,7 @@
     <string name="birthday_notification_channel_id">birthday_notification_channel</string>
     <string name="notification_title">Birthday notification</string>
     <string name="birthday_notification_channel_name">Birthday reminder</string>
-    <string name="today_birthday">today x birthday</string>
+    <string name="today_birthday">today %1$s birthday</string>
     <string name="off">Off</string>
     <string name="on">On</string>
     <string name="denied_toast">Доступ запрещен</string>

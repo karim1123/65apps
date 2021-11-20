@@ -1,4 +1,4 @@
-package com.karimgabbasov.a65apps
+package com.karimgabbasov.a65apps.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,8 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.karimgabbasov.a65apps.databinding.FragmentRationaleBinding
-import com.karimgabbasov.a65apps.ui.ContactDetailFragment
-import com.karimgabbasov.a65apps.ui.ContactListFragment
 import com.karimgabbasov.a65apps.ui.MainActivity.Companion.CONTACT_DETAIL_FRAGMENT
 import com.karimgabbasov.a65apps.ui.MainActivity.Companion.CONTACT_LIST_FRAGMENT
 

@@ -1,9 +1,8 @@
-package com.karimgabbasov.a65apps
+package com.karimgabbasov.a65apps.model
 
 import android.content.Context
 import android.database.Cursor
 import android.provider.ContactsContract
-import android.util.Log
 import com.karimgabbasov.a65apps.data.ContactsModel
 import com.karimgabbasov.a65apps.data.DetailedContactModel
 

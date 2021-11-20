@@ -10,7 +10,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.65apps">
-        <service android:name=".ContactService"/>
         <receiver
             android:name=".AlarmReceiver"
             android:enabled="true"
