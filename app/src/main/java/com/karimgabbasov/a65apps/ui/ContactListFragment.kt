@@ -12,25 +12,27 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.karimgabbasov.a65apps.FragmentOwner
 import com.karimgabbasov.a65apps.R
-import com.karimgabbasov.a65apps.RationaleRequestPermissionFragment
-import com.karimgabbasov.a65apps.ServiceOwner
 import com.karimgabbasov.a65apps.data.ContactsModel
 import com.karimgabbasov.a65apps.databinding.FragmentContactListBinding
-import java.lang.ref.WeakReference
+import com.karimgabbasov.a65apps.viewmodel.ContactListViewModel
 
 class ContactListFragment : Fragment() {
     private var fragmentOwner: FragmentOwner? = null
     private var _binding: FragmentContactListBinding? = null
     private val binding get() = _binding!!
     private lateinit var contactId: String
+    private lateinit var viewModelContactList: ContactListViewModel
     private val readContactsPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             when {
                 granted -> {
                     // user granted permission
-                    getContactData()
+                    viewModelContactList
+                        .contactList
+                        .observe(viewLifecycleOwner, { setData(it[0]) })
                 }
                 ActivityCompat.shouldShowRequestPermissionRationale(
                     requireActivity(),
@@ -50,12 +52,18 @@ class ContactListFragment : Fragment() {
         fragmentOwner = context as? FragmentOwner
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModelContactList = ViewModelProvider(this)[ContactListViewModel::class.java]
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentContactListBinding.inflate(inflater, container, false)
+        viewModelContactList.loadContacts(requireContext())
         return binding.root
     }
 
@@ -79,27 +87,24 @@ class ContactListFragment : Fragment() {
         super.onDetach()
     }
 
-    fun setData(data: List<ContactsModel>) {
+    private fun setData(contactList: ContactsModel) {
         requireActivity().runOnUiThread {
             binding.contactCell.apply {
-                contactName.text = data.first().name
-                phoneNumber.text = data.first().number
-                if (data.first().image != null){
-                    contactPhoto.setImageURI(Uri.parse(data.first().image))
+                contactName.text = contactList.name
+                phoneNumber.text = contactList.number
+                if (contactList.image != null) {
+                    contactPhoto.setImageURI(Uri.parse(contactList.image))
                 }
             }
-            contactId = data.first().id
+            contactId = contactList.id
         }
     }
 
-    fun getContactData() {
-        val serviceOwner = (context as? ServiceOwner)?.getService()
-        serviceOwner?.getContacts(WeakReference(this), requireContext())
-    }
-
     private fun showRationaleDialog() {
-        RationaleRequestPermissionFragment().show(parentFragmentManager,
-            RationaleRequestPermissionFragment.TAG)
+        RationaleRequestPermissionFragment().show(
+            parentFragmentManager,
+            RationaleRequestPermissionFragment.TAG
+        )
     }
 
     fun requestPermission() {
