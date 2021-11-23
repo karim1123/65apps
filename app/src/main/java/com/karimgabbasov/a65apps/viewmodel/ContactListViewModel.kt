@@ -12,9 +12,9 @@ class ContactListViewModel : ViewModel() {
     private val mutableContactList = MutableLiveData<List<ContactsModel>>()
     val contactList = mutableContactList as LiveData<List<ContactsModel>>
 
-    fun loadContacts(context: Context) {
+    fun loadContacts(context: Context, query: String) {
         thread(start = true) {
-            mutableContactList.postValue(ContactsDataSource.getContactListData(context))
+            mutableContactList.postValue(ContactsDataSource.getContactListData(context, query))
         }
     }
 }
