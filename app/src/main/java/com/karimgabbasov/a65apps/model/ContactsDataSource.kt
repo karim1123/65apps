@@ -20,7 +20,7 @@ private const val SELECTION_CONTACTS = ContactsContract.Contacts._ID + " =?"
 
 object ContactsDataSource {
     private fun getContactNumbers(context: Context, id: String): Array<String> {
-        var numbers = arrayOf<String>("-", "-")
+        val numbers = arrayOf<String>("-", "-")
         val phoneUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI
         context.contentResolver?.query(
             phoneUri,
@@ -46,7 +46,7 @@ object ContactsDataSource {
     }
 
     private fun getContactEmails(context: Context, id: String): Array<String> {
-        var emails = arrayOf<String>("-", "-")
+        val emails = arrayOf<String>("-", "-")
         val emailUri = ContactsContract.CommonDataKinds.Email.CONTENT_URI
         context.contentResolver?.query(
             emailUri,
@@ -109,7 +109,7 @@ object ContactsDataSource {
         return birthday
     }
 
-    fun getContactListData(context: Context): List<ContactsModel> {
+    fun getContactListData(context: Context, query: String): List<ContactsModel> {
         val contactList = mutableListOf<ContactsModel>()
         val contactsUri = ContactsContract.Contacts.CONTENT_URI
         context.contentResolver?.query(contactsUri, null, null, null, null).use { contactsCursor ->
@@ -125,12 +125,16 @@ object ContactsDataSource {
                         contactsCursor.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME)
                     )
                     val number = getContactNumbers(context, id)
-                    contactList.add(
-                        ContactsModel(
-                            id = id,
-                            name = name,
-                            number = number[0],
-                            image = image))
+                    if (name.uppercase().contains(query.uppercase())) {
+                        contactList.add(
+                            ContactsModel(
+                                id = id,
+                                name = name,
+                                number = number[0],
+                                image = image
+                            )
+                        )
+                    }
                 }
             }
         }

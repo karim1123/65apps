@@ -2,37 +2,39 @@ package com.karimgabbasov.a65apps.ui
 
 import android.Manifest
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.karimgabbasov.a65apps.ContactListItemAdapter
 import com.karimgabbasov.a65apps.FragmentOwner
 import com.karimgabbasov.a65apps.R
+import com.karimgabbasov.a65apps.SimpleOffsetDrawer
 import com.karimgabbasov.a65apps.data.ContactsModel
 import com.karimgabbasov.a65apps.databinding.FragmentContactListBinding
 import com.karimgabbasov.a65apps.viewmodel.ContactListViewModel
 
-class ContactListFragment : Fragment() {
+class ContactListFragment : Fragment(), SearchView.OnQueryTextListener {
     private var fragmentOwner: FragmentOwner? = null
     private var _binding: FragmentContactListBinding? = null
     private val binding get() = _binding!!
-    private lateinit var contactId: String
     private lateinit var viewModelContactList: ContactListViewModel
     private val readContactsPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             when {
                 granted -> {
                     // user granted permission
-                    viewModelContactList
-                        .contactList
-                        .observe(viewLifecycleOwner, { setData(it[0]) })
+                    preparingContactsInfoForDisplay()
                 }
                 ActivityCompat.shouldShowRequestPermissionRationale(
                     requireActivity(),
@@ -63,18 +65,14 @@ class ContactListFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentContactListBinding.inflate(inflater, container, false)
-        viewModelContactList.loadContacts(requireContext())
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.contactCell.root.setOnClickListener {
-            fragmentOwner?.setContactDetailsFragment(contactId)
-        }
-        requestPermission()
         (activity as AppCompatActivity).supportActionBar?.title =
             getString(R.string.contact_list_fragment_title)
+        requestPermission()
     }
 
     override fun onDestroyView() {
@@ -87,17 +85,49 @@ class ContactListFragment : Fragment() {
         super.onDetach()
     }
 
-    private fun setData(contactList: ContactsModel) {
-        requireActivity().runOnUiThread {
-            binding.contactCell.apply {
-                contactName.text = contactList.name
-                phoneNumber.text = contactList.number
-                if (contactList.image != null) {
-                    contactPhoto.setImageURI(Uri.parse(contactList.image))
-                }
-            }
-            contactId = contactList.id
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_contacts_search, menu)
+        val search = menu.findItem(R.id.menu_search)
+        val searchView = search.actionView as? SearchView
+        searchView?.setOnQueryTextListener(this)
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        if (query != null) {
+            searchContacts(query)
         }
+        return true
+    }
+
+    override fun onQueryTextChange(query: String?): Boolean {
+        if (query != null) {
+            searchContacts(query)
+        }
+        return true
+    }
+
+    private fun preparingContactsInfoForDisplay() {
+        val contactsAdapter =
+            ContactListItemAdapter { contactsModel -> adapterOnClick(contactsModel) }
+        val contactListRecyclerView = binding.contactListRecycler
+        contactListRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        contactListRecyclerView.adapter = contactsAdapter
+        contactListRecyclerView.addItemDecoration(SimpleOffsetDrawer(4))
+        viewModelContactList.loadContacts(requireContext(), EMPTY_QUERY)
+        viewModelContactList
+            .contactList
+            .observe(viewLifecycleOwner, {
+                contactsAdapter.submitList(it)
+            })
+        setHasOptionsMenu(true)
+    }
+
+    private fun searchContacts(query: String) {
+        viewModelContactList.loadContacts(requireContext(), query)
+    }
+
+    private fun adapterOnClick(contactsModel: ContactsModel) {
+        fragmentOwner?.setContactDetailsFragment(contactsModel.id)
     }
 
     private fun showRationaleDialog() {
@@ -112,6 +142,7 @@ class ContactListFragment : Fragment() {
     }
 
     companion object {
+        private const val EMPTY_QUERY = ""
         fun getNewInstance(): ContactListFragment {
             return ContactListFragment()
         }

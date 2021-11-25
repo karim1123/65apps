@@ -32,6 +32,7 @@ class ContactDetailFragment : Fragment() {
             when {
                 granted -> {
                     // user granted permission
+                    viewModelContactDetail.loadDetailContact(requireContext(), contactId)
                     viewModelContactDetail
                         .contactDetails
                         .observe(viewLifecycleOwner, {setData(it[0])})
@@ -61,7 +62,6 @@ class ContactDetailFragment : Fragment() {
     ): View {
         _binding = FragmentContactDetailBinding.inflate(inflater, container, false)
         contactId = arguments?.getString(ARGUMENT_ID).toString()
-        viewModelContactDetail.loadDetailContact(requireContext(), contactId)
         return binding.root
     }
 
@@ -74,7 +74,12 @@ class ContactDetailFragment : Fragment() {
         )//проверка состояния switch
         binding.switchNotification.setOnClickListener { //обработка нажатий switch
             if (binding.switchNotification.isChecked) {
-                AlarmUtils.setupAlarm(requireContext(), contactName, contactId, contactBirthday)
+                if (contactBirthday != EMPTY_BIRTHDAY){
+                    AlarmUtils.setupAlarm(requireContext(), contactName, contactId, contactBirthday)
+                } else {
+                    Toast.makeText(context, R.string.denied_alarm_toast, Toast.LENGTH_SHORT).show()
+                    binding.switchNotification.isChecked = false
+                }
             } else {
                 AlarmUtils.cancelAlarm(requireContext(), contactId)
             }
@@ -120,6 +125,7 @@ class ContactDetailFragment : Fragment() {
 
     companion object {
         private const val ARGUMENT_ID = "id"
+        private const val EMPTY_BIRTHDAY = "-"
         fun getNewInstance(id: String): ContactDetailFragment =
             ContactDetailFragment().apply {
                 arguments = bundleOf(
