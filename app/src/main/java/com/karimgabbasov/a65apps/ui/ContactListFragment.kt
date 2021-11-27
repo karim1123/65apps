@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -110,10 +111,15 @@ class ContactListFragment : Fragment(), SearchView.OnQueryTextListener {
         val contactsAdapter =
             ContactListItemAdapter { contactsModel -> adapterOnClick(contactsModel) }
         val contactListRecyclerView = binding.contactListRecycler
+        val progressIndicator = binding.contactListProgressIndicator
         contactListRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         contactListRecyclerView.adapter = contactsAdapter
         contactListRecyclerView.addItemDecoration(SimpleOffsetDrawer(4))
-        viewModelContactList.loadContacts(requireContext(), EMPTY_QUERY)
+        viewModelContactList
+            .progressIndicatorStatus
+            .observe(viewLifecycleOwner, {
+                progressIndicator.isVisible = it
+            })
         viewModelContactList
             .contactList
             .observe(viewLifecycleOwner, {
@@ -123,7 +129,7 @@ class ContactListFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun searchContacts(query: String) {
-        viewModelContactList.loadContacts(requireContext(), query)
+        viewModelContactList.loadContacts(query)
     }
 
     private fun adapterOnClick(contactsModel: ContactsModel) {
@@ -142,7 +148,6 @@ class ContactListFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     companion object {
-        private const val EMPTY_QUERY = ""
         fun getNewInstance(): ContactListFragment {
             return ContactListFragment()
         }

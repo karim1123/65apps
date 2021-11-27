@@ -114,4 +114,12 @@
         android:textSize="24sp"
         android:textStyle="normal" />
 
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/contact_details_progress_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
 </RelativeLayout>

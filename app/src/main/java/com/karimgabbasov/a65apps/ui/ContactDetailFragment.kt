@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.karimgabbasov.a65apps.R
@@ -19,6 +20,7 @@ import com.karimgabbasov.a65apps.databinding.FragmentContactDetailBinding
 import com.karimgabbasov.a65apps.utils.AlarmUtils
 import com.karimgabbasov.a65apps.utils.checkNotificationSwitchStatusUtil
 import com.karimgabbasov.a65apps.viewmodel.ContactDetailViewModel
+import com.karimgabbasov.a65apps.viewmodel.ContactDetailViewModelFactory
 
 class ContactDetailFragment : Fragment() {
     private var _binding: FragmentContactDetailBinding? = null
@@ -32,10 +34,7 @@ class ContactDetailFragment : Fragment() {
             when {
                 granted -> {
                     // user granted permission
-                    viewModelContactDetail.loadDetailContact(requireContext(), contactId)
-                    viewModelContactDetail
-                        .contactDetails
-                        .observe(viewLifecycleOwner, {setData(it[0])})
+                    preparingContactInfoForDisplay()
                 }
                 ActivityCompat.shouldShowRequestPermissionRationale(
                     requireActivity(),
@@ -52,7 +51,14 @@ class ContactDetailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModelContactDetail = ViewModelProvider(this)[ContactDetailViewModel::class.java]
+        contactId = arguments?.getString(ARGUMENT_ID).toString()
+        val activity = requireNotNull(this.activity)
+        activity?.application?.let {
+            viewModelContactDetail = ViewModelProvider(
+                this,
+                ContactDetailViewModelFactory(it, contactId)
+            ).get(ContactDetailViewModel::class.java)
+        }
     }
 
     override fun onCreateView(
@@ -61,7 +67,6 @@ class ContactDetailFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentContactDetailBinding.inflate(inflater, container, false)
-        contactId = arguments?.getString(ARGUMENT_ID).toString()
         return binding.root
     }
 
@@ -74,7 +79,7 @@ class ContactDetailFragment : Fragment() {
         )//проверка состояния switch
         binding.switchNotification.setOnClickListener { //обработка нажатий switch
             if (binding.switchNotification.isChecked) {
-                if (contactBirthday != EMPTY_BIRTHDAY){
+                if (contactBirthday != EMPTY_BIRTHDAY) {
                     AlarmUtils.setupAlarm(requireContext(), contactName, contactId, contactBirthday)
                 } else {
                     Toast.makeText(context, R.string.denied_alarm_toast, Toast.LENGTH_SHORT).show()
@@ -91,6 +96,18 @@ class ContactDetailFragment : Fragment() {
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    private fun preparingContactInfoForDisplay() {
+        val progressIndicator = binding.contactDetailsProgressIndicator
+        viewModelContactDetail
+            .progressIndicatorStatus
+            .observe(viewLifecycleOwner, {
+                progressIndicator.isVisible = it
+            })
+        viewModelContactDetail
+            .contactDetails
+            .observe(viewLifecycleOwner, { setData(it[0]) })
     }
 
     private fun setData(detailedContact: DetailedContactModel) {
