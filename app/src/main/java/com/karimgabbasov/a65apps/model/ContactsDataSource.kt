@@ -5,6 +5,7 @@ import android.database.Cursor
 import android.provider.ContactsContract
 import com.karimgabbasov.a65apps.data.ContactsModel
 import com.karimgabbasov.a65apps.data.DetailedContactModel
+import io.reactivex.rxjava3.core.Single
 
 private const val SELECTION_NUMBER = ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " =?"
 private const val SELECTION_MAIL = ContactsContract.CommonDataKinds.Email.CONTACT_ID + " =?"
@@ -18,9 +19,9 @@ private const val SELECTION_BIRTHDAY = ContactsContract.Data.CONTACT_ID + "=?" +
         " = " + ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY
 private const val SELECTION_CONTACTS = ContactsContract.Contacts._ID + " =?"
 
-object ContactsDataSource {
+class ContactsDataSource (private val context: Context) {
     private fun getContactNumbers(context: Context, id: String): Array<String> {
-        val numbers = arrayOf<String>("-", "-")
+        val numbers = arrayOf("-", "-")
         val phoneUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI
         context.contentResolver?.query(
             phoneUri,
@@ -46,7 +47,7 @@ object ContactsDataSource {
     }
 
     private fun getContactEmails(context: Context, id: String): Array<String> {
-        val emails = arrayOf<String>("-", "-")
+        val emails = arrayOf("-", "-")
         val emailUri = ContactsContract.CommonDataKinds.Email.CONTENT_URI
         context.contentResolver?.query(
             emailUri,
@@ -109,7 +110,7 @@ object ContactsDataSource {
         return birthday
     }
 
-    fun getContactListData(context: Context, query: String): List<ContactsModel> {
+    private fun getContactListData(context: Context, query: String): List<ContactsModel> {
         val contactList = mutableListOf<ContactsModel>()
         val contactsUri = ContactsContract.Contacts.CONTENT_URI
         context.contentResolver?.query(contactsUri, null, null, null, null).use { contactsCursor ->
@@ -141,7 +142,7 @@ object ContactsDataSource {
         return contactList
     }
 
-    fun getContactData(context: Context, id: String): List<DetailedContactModel> {
+    private fun getContactData(context: Context, id: String): List<DetailedContactModel> {
         val contact = mutableListOf<DetailedContactModel>()
         val contactsUri = ContactsContract.Contacts.CONTENT_URI
         context.contentResolver?.query(
@@ -181,4 +182,14 @@ object ContactsDataSource {
         }
         return contact
     }
+
+    fun getContacts(query: String): Single<List<ContactsModel>> =
+        Single.fromCallable {
+            Thread.sleep(1000L)
+            getContactListData(context, query) }
+
+    fun getContact(id: String): Single<List<DetailedContactModel>> =
+        Single.fromCallable {
+            Thread.sleep(1000L)
+            getContactData(context, id) }
 }

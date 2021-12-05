@@ -13,4 +13,12 @@
         android:scrollbars="vertical"
         app:layoutManager="LinearLayoutManager"/>
 
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/contact_list_progress_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:indeterminate="true"/>
+
 </FrameLayout>

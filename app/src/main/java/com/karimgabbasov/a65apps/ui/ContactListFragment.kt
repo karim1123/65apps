@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,7 +23,9 @@ import com.karimgabbasov.a65apps.R
 import com.karimgabbasov.a65apps.SimpleOffsetDrawer
 import com.karimgabbasov.a65apps.data.ContactsModel
 import com.karimgabbasov.a65apps.databinding.FragmentContactListBinding
+import com.karimgabbasov.a65apps.di.injectViewModel
 import com.karimgabbasov.a65apps.viewmodel.ContactListViewModel
+import javax.inject.Inject
 
 class ContactListFragment : Fragment(), SearchView.OnQueryTextListener {
     private var fragmentOwner: FragmentOwner? = null
@@ -49,9 +52,17 @@ class ContactListFragment : Fragment(), SearchView.OnQueryTextListener {
             }
         }
 
+    @Inject
+    lateinit var factory: ViewModelProvider.Factory
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         fragmentOwner = context as? FragmentOwner
+        (activity?.application as ContactApplication)
+            .appComponent
+            .plusContactListComponent()
+            .inject(this)
+        viewModelContactList = injectViewModel(factory)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,10 +121,15 @@ class ContactListFragment : Fragment(), SearchView.OnQueryTextListener {
         val contactsAdapter =
             ContactListItemAdapter { contactsModel -> adapterOnClick(contactsModel) }
         val contactListRecyclerView = binding.contactListRecycler
+        val progressIndicator = binding.contactListProgressIndicator
         contactListRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         contactListRecyclerView.adapter = contactsAdapter
         contactListRecyclerView.addItemDecoration(SimpleOffsetDrawer(4))
-        viewModelContactList.loadContacts(requireContext(), EMPTY_QUERY)
+        viewModelContactList
+            .progressIndicatorStatus
+            .observe(viewLifecycleOwner, {
+                progressIndicator.isVisible = it
+            })
         viewModelContactList
             .contactList
             .observe(viewLifecycleOwner, {
@@ -123,7 +139,7 @@ class ContactListFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun searchContacts(query: String) {
-        viewModelContactList.loadContacts(requireContext(), query)
+        viewModelContactList.loadContacts(query)
     }
 
     private fun adapterOnClick(contactsModel: ContactsModel) {
@@ -142,7 +158,6 @@ class ContactListFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     companion object {
-        private const val EMPTY_QUERY = ""
         fun getNewInstance(): ContactListFragment {
             return ContactListFragment()
         }
