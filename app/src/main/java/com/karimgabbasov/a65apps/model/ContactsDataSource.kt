@@ -19,7 +19,7 @@ private const val SELECTION_BIRTHDAY = ContactsContract.Data.CONTACT_ID + "=?" +
         " = " + ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY
 private const val SELECTION_CONTACTS = ContactsContract.Contacts._ID + " =?"
 
-object ContactsDataSource {
+class ContactsDataSource (private val context: Context) {
     private fun getContactNumbers(context: Context, id: String): Array<String> {
         val numbers = arrayOf("-", "-")
         val phoneUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI
@@ -183,12 +183,12 @@ object ContactsDataSource {
         return contact
     }
 
-    fun getContacts(context: Context, query: String): Single<List<ContactsModel>> =
+    fun getContacts(query: String): Single<List<ContactsModel>> =
         Single.fromCallable {
             Thread.sleep(1000L)
             getContactListData(context, query) }
 
-    fun getContact(context: Context, id: String): Single<List<DetailedContactModel>> =
+    fun getContact(id: String): Single<List<DetailedContactModel>> =
         Single.fromCallable {
             Thread.sleep(1000L)
             getContactData(context, id) }

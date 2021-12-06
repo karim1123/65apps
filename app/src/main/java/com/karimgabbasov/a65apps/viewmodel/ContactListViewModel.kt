@@ -1,19 +1,19 @@
 package com.karimgabbasov.a65apps.viewmodel
 
-import android.app.Application
-
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.karimgabbasov.a65apps.R
 import com.karimgabbasov.a65apps.data.ContactsModel
 import com.karimgabbasov.a65apps.model.ContactsDataSource
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class ContactListViewModel(application: Application) : AndroidViewModel(application) {
+class ContactListViewModel @Inject constructor(private val repository: ContactsDataSource) :
+    ViewModel() {
     private val mutableContactList = MutableLiveData<List<ContactsModel>>()
     private val mutableProgressIndicatorStatus = MutableLiveData<Boolean>()
     val contactList = mutableContactList as LiveData<List<ContactsModel>>
@@ -25,8 +25,7 @@ class ContactListViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun loadContacts(query: String) {
-        val context by lazy { getApplication<Application>().applicationContext }
-        disposable = ContactsDataSource.getContacts(context, query)
+        disposable = repository.getContacts(query)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { mutableProgressIndicatorStatus.postValue(true) }
@@ -47,7 +46,7 @@ class ContactListViewModel(application: Application) : AndroidViewModel(applicat
         super.onCleared()
     }
 
-    companion object{
+    companion object {
         const val EMPTY_QUERY = ""
     }
 }

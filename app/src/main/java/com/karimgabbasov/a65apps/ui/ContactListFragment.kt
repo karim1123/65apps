@@ -23,7 +23,9 @@ import com.karimgabbasov.a65apps.R
 import com.karimgabbasov.a65apps.SimpleOffsetDrawer
 import com.karimgabbasov.a65apps.data.ContactsModel
 import com.karimgabbasov.a65apps.databinding.FragmentContactListBinding
+import com.karimgabbasov.a65apps.di.injectViewModel
 import com.karimgabbasov.a65apps.viewmodel.ContactListViewModel
+import javax.inject.Inject
 
 class ContactListFragment : Fragment(), SearchView.OnQueryTextListener {
     private var fragmentOwner: FragmentOwner? = null
@@ -49,15 +51,17 @@ class ContactListFragment : Fragment(), SearchView.OnQueryTextListener {
                 }
             }
         }
+    @Inject
+    lateinit var factory: ViewModelProvider.Factory
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         fragmentOwner = context as? FragmentOwner
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModelContactList = ViewModelProvider(this)[ContactListViewModel::class.java]
+        (activity?.application as ContactApplication)
+            .appComponent
+            .plusContactListComponent()
+            .inject(this)
+        viewModelContactList = injectViewModel(factory)
     }
 
     override fun onCreateView(
