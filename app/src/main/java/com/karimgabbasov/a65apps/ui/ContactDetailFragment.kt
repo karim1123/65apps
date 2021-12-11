@@ -1,6 +1,7 @@
 package com.karimgabbasov.a65apps.ui
 
 import android.Manifest
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,10 +18,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.karimgabbasov.a65apps.R
 import com.karimgabbasov.a65apps.data.DetailedContactModel
 import com.karimgabbasov.a65apps.databinding.FragmentContactDetailBinding
+import com.karimgabbasov.a65apps.di.injectViewModel
 import com.karimgabbasov.a65apps.utils.AlarmUtils
 import com.karimgabbasov.a65apps.utils.checkNotificationSwitchStatusUtil
 import com.karimgabbasov.a65apps.viewmodel.ContactDetailViewModel
-import com.karimgabbasov.a65apps.viewmodel.ContactDetailViewModelFactory
+import javax.inject.Inject
 
 class ContactDetailFragment : Fragment() {
     private var _binding: FragmentContactDetailBinding? = null
@@ -49,16 +51,17 @@ class ContactDetailFragment : Fragment() {
             }
         }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    @Inject
+    lateinit var factory: ViewModelProvider.Factory
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
         contactId = arguments?.getString(ARGUMENT_ID).toString()
-        val activity = requireNotNull(this.activity)
-        activity?.application?.let {
-            viewModelContactDetail = ViewModelProvider(
-                this,
-                ContactDetailViewModelFactory(it, contactId)
-            ).get(ContactDetailViewModel::class.java)
-        }
+        (activity?.application as ContactApplication)
+            .appComponent
+            .plusContactDetailsComponent()
+            .inject(this)
+        viewModelContactDetail = injectViewModel(factory)
     }
 
     override fun onCreateView(
@@ -100,6 +103,7 @@ class ContactDetailFragment : Fragment() {
 
     private fun preparingContactInfoForDisplay() {
         val progressIndicator = binding.contactDetailsProgressIndicator
+        viewModelContactDetail.loadDetailContact(contactId)
         viewModelContactDetail
             .progressIndicatorStatus
             .observe(viewLifecycleOwner, {
