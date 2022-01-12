@@ -20,9 +20,9 @@ import com.karimgabbasov.a65apps.databinding.FragmentContactDetailBinding
 import com.karimgabbasov.a65apps.di.api.AppContainer
 import com.karimgabbasov.a65apps.di.injectViewModel
 import com.karimgabbasov.a65apps.entity.contactmodels.DetailedContactModel
-import com.karimgabbasov.a65apps.utils.AlarmUtils
 import com.karimgabbasov.a65apps.utils.checkNotificationSwitchStatusUtil
 import com.karimgabbasov.a65apps.viewmodel.ContactDetailsViewModel
+import java.util.*
 import javax.inject.Inject
 
 class ContactDetailsFragment : Fragment() {
@@ -81,15 +81,14 @@ class ContactDetailsFragment : Fragment() {
             contactId
         )//проверка состояния switch
         binding.switchNotification.setOnClickListener { //обработка нажатий switch
-            if (binding.switchNotification.isChecked) {
-                if (contactBirthday != EMPTY_BIRTHDAY) {
-                    AlarmUtils.setupAlarm(requireContext(), contactName, contactId, contactBirthday)
-                } else {
-                    Toast.makeText(context, R.string.denied_alarm_toast, Toast.LENGTH_SHORT).show()
-                    binding.switchNotification.isChecked = false
-                }
+            if (contactBirthday != EMPTY_BIRTHDAY) {
+                viewModelContactDetails.changeNotifyStatus(
+                    binding.switchNotification.isChecked,
+                    GregorianCalendar.getInstance()
+                )
             } else {
-                AlarmUtils.cancelAlarm(requireContext(), contactId)
+                Toast.makeText(context, R.string.denied_alarm_toast, Toast.LENGTH_SHORT).show()
+                binding.switchNotification.isChecked = false
             }
         }
         (activity as AppCompatActivity).supportActionBar?.title =

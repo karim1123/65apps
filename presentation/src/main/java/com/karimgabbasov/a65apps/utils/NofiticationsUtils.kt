@@ -7,17 +7,18 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.karimgabbasov.a65apps.R
-import com.karimgabbasov.a65apps.interactors.birthday.CountMillsInteractor.countMills
+import com.karimgabbasov.a65apps.interactors.birthday.countMills
 import com.karimgabbasov.a65apps.ui.activity.MainActivity
+import java.util.*
 
 private const val ID = "id"
 
 fun NotificationManager.sendBirthdayNotification(
     context: Context,
     id: String,
-    reminderBody: String,
+    notificationBody: String,
     intent: Intent,
-    date: String?
+    birthday: String?
 ) {
     val contentIntent = Intent(context, MainActivity::class.java).apply {
         putExtra(ID, id)
@@ -37,7 +38,7 @@ fun NotificationManager.sendBirthdayNotification(
             context
                 .getString(R.string.notification_title)
         )
-        .setContentText(reminderBody)
+        .setContentText(notificationBody)
         .setContentIntent(contentPendingIntent)
         .setAutoCancel(true)
         .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -52,10 +53,10 @@ fun NotificationManager.sendBirthdayNotification(
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
-    val timeBeforeBirthdayInMills: Long = date.countMills()
+    val timeBeforeBirthdayInMills = birthday.countMills(GregorianCalendar.getInstance())
     alrmMgr?.set(
         AlarmManager.RTC_WAKEUP,
-        timeBeforeBirthdayInMills, alarmIntent
+        timeBeforeBirthdayInMills.timeInMillis, alarmIntent
     )
 }
 

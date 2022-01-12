@@ -18,14 +18,22 @@ class AlarmReceiver : BroadcastReceiver() {
             context.getString(R.string.birthday_notification_channel_id),
             context.getString(R.string.birthday_notification_channel_name)
         )
-        val reminderBody: String = intent.getStringExtra(NAME).toString()
-        val id: String = intent.getStringExtra(ID).toString()//id фрагмента
-        val date: String? = intent.getStringExtra(DATE)//дата дня рождения
+        val name = intent.getStringExtra(NAME).toString()
+        val id = intent.getStringExtra(ID).toString()//id фрагмента
+        val birthday = intent.getStringExtra(DATE).toString()//дата дня рождения
+        val notificationBody = context.getString(R.string.today_birthday, name)
+
         val notificationManager = ContextCompat.getSystemService(
             context,
             NotificationManager::class.java
         ) as NotificationManager
-        notificationManager.sendBirthdayNotification(context, id, reminderBody, intent, date)
+        notificationManager.sendBirthdayNotification(
+            context,
+            id,
+            notificationBody,
+            intent,
+            birthday
+        )
     }
 
     private fun createChannel(context: Context, channelId: String, channelName: String) {
