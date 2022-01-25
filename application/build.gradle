@@ -45,6 +45,9 @@ dependencies {
     def daggerVer = 2.40
     implementation "com.google.dagger:dagger:$daggerVer"
     kapt "com.google.dagger:dagger-compiler:$daggerVer"
+    //RxJava
+    implementation "io.reactivex.rxjava3:rxandroid:3.0.0"
+    implementation "io.reactivex.rxjava3:rxjava:3.0.10"
     //implementations
     api project(path: ':presentation')
 }
