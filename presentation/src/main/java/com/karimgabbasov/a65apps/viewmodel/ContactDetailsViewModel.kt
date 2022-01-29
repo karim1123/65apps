@@ -6,8 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.karimgabbasov.a65apps.R
 import com.karimgabbasov.a65apps.entity.contactmodels.DetailedContactModel
-import com.karimgabbasov.a65apps.interactors.birthday.BirthdayNotificationInteractorImpl
-import com.karimgabbasov.a65apps.interactors.viewmodel.ContactDetailsInteractorImpl
+import com.karimgabbasov.a65apps.interactors.birthday.BirthdayNotificationInteractor
+import com.karimgabbasov.a65apps.interactors.viewmodel.ContactDetailsInteractor
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -16,8 +16,8 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class ContactDetailsViewModel @Inject constructor(
-    private val repository: ContactDetailsInteractorImpl,
-    private val birthdayNotificationInteractorImpl: BirthdayNotificationInteractorImpl,
+    private val repository: ContactDetailsInteractor,
+    private val birthdayNotificationInteractorImpl: BirthdayNotificationInteractor,
     @Named(subscribeOnSchedulerQualifier) private val subscribeOnScheduler: Scheduler,
     @Named(observeOnSchedulerQualifier) private val observeOnScheduler: Scheduler
 ) :

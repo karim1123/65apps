@@ -6,14 +6,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.karimgabbasov.a65apps.R
 import com.karimgabbasov.a65apps.entity.contactmodels.ContactsListModel
-import com.karimgabbasov.a65apps.interactors.viewmodel.ContactListInteractorImpl
+import com.karimgabbasov.a65apps.interactors.viewmodel.ContactListInteractor
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
-class ContactListViewModel @Inject constructor(private val repository: ContactListInteractorImpl) :
+class ContactListViewModel @Inject constructor(private val repository: ContactListInteractor) :
     ViewModel() {
     private val mutableContactList = MutableLiveData<List<ContactsListModel>>()
     private val mutableProgressIndicatorStatus = MutableLiveData<Boolean>()

@@ -6,7 +6,9 @@ import androidx.fragment.app.FragmentTransaction
 import com.karimgabbasov.a65apps.R
 import com.karimgabbasov.a65apps.ui.FragmentOwner
 import com.karimgabbasov.a65apps.ui.fragments.ContactDetailsFragment
+import com.karimgabbasov.a65apps.ui.fragments.ContactDetailsMapFragment
 import com.karimgabbasov.a65apps.ui.fragments.ContactListFragment
+import com.karimgabbasov.a65apps.ui.fragments.RouteFragment
 
 class MainActivity : AppCompatActivity(), FragmentOwner {
 
@@ -38,6 +40,26 @@ class MainActivity : AppCompatActivity(), FragmentOwner {
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit()
     }
 
+    override fun setContactDetailsMapFragment(id: String) {
+        supportFragmentManager.beginTransaction().replace(
+            R.id.fragmentContainer,
+            ContactDetailsMapFragment.getNewInstance(id),
+            CONTACT_DETAIL_MAP_FRAGMENT
+        )
+            .addToBackStack(null)
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit()
+    }
+
+    override fun setRouteFragment() {
+        supportFragmentManager.beginTransaction().replace(
+            R.id.fragmentContainer,
+            RouteFragment.getNewInstance(),
+            ROUTE_FRAGMENT
+        )
+            .addToBackStack(null)
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit()
+    }
+
     private fun chekNotificationIntent() {
         val id: String? = intent.getStringExtra("id")//принимаем id из AlarmReceiver
         if (id != null) {
@@ -48,5 +70,7 @@ class MainActivity : AppCompatActivity(), FragmentOwner {
     companion object {
         const val CONTACT_DETAIL_FRAGMENT = "ContactDetailFragment"
         const val CONTACT_LIST_FRAGMENT = "ContactListFragment"
+        const val CONTACT_DETAIL_MAP_FRAGMENT = "ContactDetailsMapFragment"
+        const val ROUTE_FRAGMENT = "RouteFragment "
     }
 }

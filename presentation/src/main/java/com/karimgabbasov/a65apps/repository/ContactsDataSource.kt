@@ -1,4 +1,4 @@
-package com.karimgabbasov.a65apps.model
+package com.karimgabbasov.a65apps.repository
 
 import android.content.Context
 import android.database.Cursor
