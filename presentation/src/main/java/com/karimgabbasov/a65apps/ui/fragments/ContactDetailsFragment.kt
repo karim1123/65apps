@@ -20,6 +20,7 @@ import com.karimgabbasov.a65apps.databinding.FragmentContactDetailBinding
 import com.karimgabbasov.a65apps.di.api.AppContainer
 import com.karimgabbasov.a65apps.di.injectViewModel
 import com.karimgabbasov.a65apps.entity.contactmodels.DetailedContactModel
+import com.karimgabbasov.a65apps.ui.FragmentOwner
 import com.karimgabbasov.a65apps.utils.checkNotificationSwitchStatusUtil
 import com.karimgabbasov.a65apps.viewmodel.ContactDetailsViewModel
 import java.util.*
@@ -32,6 +33,7 @@ class ContactDetailsFragment : Fragment() {
     private lateinit var contactId: String
     private var contactBirthday: String? = null
     private lateinit var viewModelContactDetails: ContactDetailsViewModel
+    private var fragmentOwner: FragmentOwner? = null
     private val readContactsPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             when {
@@ -57,6 +59,7 @@ class ContactDetailsFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        fragmentOwner = context as? FragmentOwner
         contactId = arguments?.getString(ARGUMENT_ID).toString()
         (activity?.application as AppContainer).getAppComponent()
             ?.plusContactDetailsComponent()
@@ -91,6 +94,9 @@ class ContactDetailsFragment : Fragment() {
                 binding.switchNotification.isChecked = false
             }
         }
+        binding.openMapButton.setOnClickListener {
+            fragmentOwner?.setContactDetailsMapFragment(contactId)
+        }
         (activity as AppCompatActivity).supportActionBar?.title =
             getString(R.string.contact_detail_fragment_title)
     }
@@ -105,12 +111,12 @@ class ContactDetailsFragment : Fragment() {
         viewModelContactDetails.loadDetailContact(contactId)
         viewModelContactDetails
             .progressIndicatorStatus
-            .observe(viewLifecycleOwner, {
+            .observe(viewLifecycleOwner) {
                 progressIndicator.isVisible = it
-            })
+            }
         viewModelContactDetails
             .contactDetails
-            .observe(viewLifecycleOwner, { setData(it[0]) })
+            .observe(viewLifecycleOwner) { setData(it[0]) }
     }
 
     private fun setData(detailedContact: DetailedContactModel) {
