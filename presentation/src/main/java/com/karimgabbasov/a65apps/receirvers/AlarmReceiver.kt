@@ -19,8 +19,8 @@ class AlarmReceiver : BroadcastReceiver() {
             context.getString(R.string.birthday_notification_channel_name)
         )
         val name = intent.getStringExtra(NAME).toString()
-        val id = intent.getStringExtra(ID).toString()//id фрагмента
-        val birthday = intent.getStringExtra(DATE).toString()//дата дня рождения
+        val id = intent.getStringExtra(ID).toString() // id фрагмента
+        val birthday = intent.getStringExtra(DATE).toString() // дата дня рождения
         val notificationBody = context.getString(R.string.today_birthday, name)
 
         val notificationManager = ContextCompat.getSystemService(

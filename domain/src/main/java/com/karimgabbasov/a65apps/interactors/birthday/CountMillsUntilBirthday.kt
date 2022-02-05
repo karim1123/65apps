@@ -1,7 +1,9 @@
 package com.karimgabbasov.a65apps.interactors.birthday
 
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.GregorianCalendar
+import java.util.Locale
 
 fun String?.countMills(
     currentDate: Calendar
@@ -15,8 +17,8 @@ fun String?.countMills(
         val year = calendar.get(Calendar.YEAR)
         if (year.isLeapYear()) {
             calendar.set(
-                Calendar.YEAR, currentDate.get(Calendar.YEAR)
-                        + (4 - currentDate.get(Calendar.YEAR) % 4)
+                Calendar.YEAR,
+                currentDate.get(Calendar.YEAR) + (4 - currentDate.get(Calendar.YEAR) % 4)
             )
             calendar.set(Calendar.DAY_OF_MONTH, 29)
             if (!calendar.get(Calendar.YEAR).isLeapYear()) {
@@ -31,17 +33,15 @@ fun String?.countMills(
         }
     }
     return calendar
-
 }
 
 fun Int.isLeapYear(): Boolean {
-    var leap = false
-    if (this % 4 == 0) {
+    val leap: Boolean = if (this % 4 == 0) {
         if (this % 100 == 0) {
-            leap = this % 400 == 0
+            this % 400 == 0
         } else
-            leap = true
+            true
     } else
-        leap = false
+        false
     return leap
 }

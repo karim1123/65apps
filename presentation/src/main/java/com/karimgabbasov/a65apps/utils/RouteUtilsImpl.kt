@@ -7,9 +7,9 @@ import com.google.gson.Gson
 import com.karimgabbasov.a65apps.R
 import com.karimgabbasov.a65apps.entity.map.MapData
 import com.karimgabbasov.a65apps.entity.map.PolylineInteractor
+import javax.inject.Inject
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import javax.inject.Inject
 
 class RouteUtilsImpl @Inject constructor(
     private val context: Context,
@@ -18,7 +18,7 @@ class RouteUtilsImpl @Inject constructor(
     override fun getPolylines(
         originLocation: LatLng,
         destinationLocation: LatLng,
-        apiKey: String,
+        apiKey: String
     ): ArrayList<List<LatLng>> {
         val url = getDirectionURL(originLocation, destinationLocation, apiKey)
         val client = OkHttpClient()
@@ -36,7 +36,6 @@ class RouteUtilsImpl @Inject constructor(
                             LatLng(it.latitude, it.longitude)
                         }
                 )
-
             }
             result.add(path)
         } catch (e: Exception) {
@@ -49,10 +48,10 @@ class RouteUtilsImpl @Inject constructor(
     override fun getDirectionURL(origin: LatLng, dest: LatLng, secret: String): String {
         return context.getString(
             R.string.route_request,
-            origin.latitude,
-            origin.longitude,
-            dest.latitude,
-            dest.longitude,
+            origin.latitude.toString(),
+            origin.longitude.toString(),
+            dest.latitude.toString(),
+            dest.longitude.toString(),
             secret
         )
     }

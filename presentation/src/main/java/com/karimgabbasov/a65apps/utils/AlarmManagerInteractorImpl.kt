@@ -7,7 +7,7 @@ import android.content.Intent
 import com.karimgabbasov.a65apps.entity.contactmodels.DetailedContactModel
 import com.karimgabbasov.a65apps.interactors.birthday.AlarmManagerInteractor
 import com.karimgabbasov.a65apps.receirvers.AlarmReceiver
-import java.util.*
+import java.util.Calendar
 import javax.inject.Inject
 
 private const val NAME = "name"
@@ -22,7 +22,7 @@ class AlarmManagerInteractorImpl @Inject constructor(
     override fun setupAlarmManager(
         contact: DetailedContactModel,
         alarmDate: Calendar
-    ) { //функция для вызова alarm manager
+    ) { // функция для вызова alarm manager
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             putExtra(NAME, contact.name)
             putExtra(ID, contact.id)
@@ -39,7 +39,7 @@ class AlarmManagerInteractorImpl @Inject constructor(
         }
     }
 
-    override fun cancelAlarmManager(contact: DetailedContactModel) { //функция для отмены alarm manager
+    override fun cancelAlarmManager(contact: DetailedContactModel) { // функция для отмены alarm manager
         val intent = Intent(context, AlarmReceiver::class.java)
         val alarmIntent = createPendingIntent(contact, intent, 0)
         alarmManager.cancel(alarmIntent)

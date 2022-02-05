@@ -10,8 +10,8 @@ import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.verify
-import java.util.*
-
+import java.util.Calendar
+import java.util.GregorianCalendar
 
 class BirthdayModuleTests : DescribeSpec() {
     @MockK
@@ -34,26 +34,29 @@ class BirthdayModuleTests : DescribeSpec() {
                 every { contact.birthday } returns "1981-09-08"
                 currentDate.set(1999, 8, 9)
                 expectedDate.set(2000, 8, 8)
-
+                // вычитываем дату для уведомления
                 val notifyDate =
-                    contact.birthday.countMills(currentDate)//вычитываем дату для уведомления
+                    contact.birthday.countMills(currentDate)
+                // проверяем правильно ли рассчитана дата для уведомления
                 compareDates(
                     expectedDate,
                     notifyDate
-                )//проверяем правильно ли рассчитана дата для уведомления
+                )
+                // определяем поведение alarmManagerInteractor при передачи правильной даты
                 every {
                     alarmManagerInteractor.setupAlarmManager(
                         any(),
                         notifyDate
                     )
-                } returns Unit//определяем поведение alarmManagerInteractor при передачи правильной даты
+                } returns Unit
                 birthdayNotificationInteractorImpl.setNotification(contact, currentDate)
+                // проверяем вызывался ли alarmManagerInteractor с правильной датой
                 verify {
                     alarmManagerInteractor.setupAlarmManager(
                         any(),
                         notifyDate
                     )
-                }// проверяем вызывался ли alarmManagerInteractor с правильной датой
+                }
             }
             it("если дня рождения не было текущем году и год не високосный, то уведомление должно сработать в текущем году") {
                 every { contact.birthday } returns "1981-09-08"

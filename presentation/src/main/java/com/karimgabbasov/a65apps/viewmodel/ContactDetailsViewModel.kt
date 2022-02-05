@@ -11,7 +11,7 @@ import com.karimgabbasov.a65apps.interactors.viewmodel.ContactDetailsInteractor
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import java.util.*
+import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Named
 

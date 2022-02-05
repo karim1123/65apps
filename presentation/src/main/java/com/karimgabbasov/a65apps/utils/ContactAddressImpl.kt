@@ -7,7 +7,7 @@ import android.widget.Toast
 import com.karimgabbasov.a65apps.R
 import com.karimgabbasov.a65apps.entity.map.ContactAddress
 import java.io.IOException
-import java.util.*
+import java.util.Locale
 
 class ContactAddressImpl(private val context: Context) : ContactAddress {
     override fun getContactAddress(latitude: Double, longitude: Double): String {

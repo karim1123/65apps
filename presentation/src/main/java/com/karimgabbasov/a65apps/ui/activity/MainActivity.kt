@@ -61,9 +61,9 @@ class MainActivity : AppCompatActivity(), FragmentOwner {
     }
 
     private fun chekNotificationIntent() {
-        val id: String? = intent.getStringExtra("id")//принимаем id из AlarmReceiver
+        val id: String? = intent.getStringExtra("id") // принимаем id из AlarmReceiver
         if (id != null) {
-            setContactDetailsFragment(id)//переход из уведомления на нужный фрагмент
+            setContactDetailsFragment(id) // переход из уведомления на нужный фрагмент
         }
     }
 

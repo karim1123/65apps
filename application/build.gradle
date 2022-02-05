@@ -14,7 +14,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -33,26 +33,25 @@ android {
 }
 
 dependencies {
-
     implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.0'
-    implementation 'com.google.android.material:material:1.4.0'
-    testImplementation 'junit:junit:4.+'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.5.0'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-
-    //Dagger 2
+    // Dagger 2
     def daggerVer = 2.40
     implementation "com.google.dagger:dagger:$daggerVer"
     kapt "com.google.dagger:dagger-compiler:$daggerVer"
-    //RxJava
+    // RxJava
     implementation "io.reactivex.rxjava3:rxandroid:3.0.0"
     implementation "io.reactivex.rxjava3:rxjava:3.0.10"
-    //Room
-    def room_version = "2.4.0"
+    // Room
+    def room_version = "2.4.1"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     kapt "android.arch.persistence.room:compiler:1.1.1"
-    //implementations
+    implementation 'com.android.support:multidex:2.0.1'
+    // implementations
     api project(path: ':presentation')
 }

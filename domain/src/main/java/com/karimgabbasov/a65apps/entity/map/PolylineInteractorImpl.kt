@@ -42,4 +42,4 @@ class PolylineInteractorImpl : PolylineInteractor {
         const val UNIT_SEPARATOR = 0x1f
     }
 }
-//код позаимствован с https://www.geeksforgeeks.org/how-to-generate-route-between-two-locations-in-google-map-in-android/
+// код позаимствован с https://www.geeksforgeeks.org/how-to-generate-route-between-two-locations-in-google-map-in-android/

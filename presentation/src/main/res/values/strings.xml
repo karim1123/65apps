@@ -34,6 +34,5 @@
     <string name="wrong_first_id">Введен неправильный id! Посмотреть id контакта можно нажав на соответсвующий пин. </string>
     <string name="build_route">Построить маршрут</string>
     <string name="close_route">Закрыть</string>
-    <string name="route_request">"https://maps.googleapis.com/maps/api/directions/json?origin=%1$a
-        ,%2$a&amp;destination=%3$a,%4$a&amp;key=%5$s</string>
+    <string name="route_request">https://maps.googleapis.com/maps/api/directions/json?origin=%1s,%2s&amp;destination=%3s,%4s&amp;key=%5s</string>
 </resources>

@@ -1,9 +1,9 @@
 package com.karimgabbasov.a65apps.repository
 
+import com.karimgabbasov.a65apps.database.MapDao
+import com.karimgabbasov.a65apps.database.MapEntity
 import com.karimgabbasov.a65apps.entity.map.MapModel
 import com.karimgabbasov.a65apps.entity.map.MapRepository
-import com.karimgabbasov.database.MapDao
-import com.karimgabbasov.database.MapEntity
 
 class MapRepositoryImpl(private val mapDao: MapDao) : MapRepository {
 
@@ -40,5 +40,3 @@ class MapRepositoryImpl(private val mapDao: MapDao) : MapRepository {
         address = address
     )
 }
-
-
