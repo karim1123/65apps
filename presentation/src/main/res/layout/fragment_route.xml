@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <fragment xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.fragments.RouteFragment" />
+
+    <Button
+        android:id="@+id/btn_route"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:text="@string/route" />
+
+    <EditText
+        android:id="@+id/field_for_first_contact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/request_first_id"
+        android:visibility="gone" />
+
+    <EditText
+        android:id="@+id/field_for_second_contact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/field_for_first_contact"
+        android:hint="@string/request_second_id"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/build_route_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/field_for_second_contact"
+        android:text="@string/build_route"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/close_route_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/build_route_btn"
+        android:text="@string/close_route"
+        android:visibility="gone" />
+
+</RelativeLayout>

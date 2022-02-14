@@ -48,6 +48,11 @@ dependencies {
     //RxJava
     implementation "io.reactivex.rxjava3:rxandroid:3.0.0"
     implementation "io.reactivex.rxjava3:rxjava:3.0.10"
+    //Room
+    def room_version = "2.4.0"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    kapt "android.arch.persistence.room:compiler:1.1.1"
     //implementations
     api project(path: ':presentation')
 }

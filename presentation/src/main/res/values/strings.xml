@@ -2,6 +2,8 @@
     <string name="app_name">65apps</string>
     <string name="contact_list_fragment_title">Список контактов</string>
     <string name="contact_detail_fragment_title">Детали контактов</string>
+    <string name="contact_details_map_fragment_title">Карта для деталей контакта</string>
+    <string name="route_fragment_title">Карта для построения маршрута</string>
     <string name="birthday_notification_channel_id">birthday_notification_channel</string>
     <string name="notification_title">Birthday notification</string>
     <string name="birthday_notification_channel_name">Birthday reminder</string>
@@ -17,4 +19,21 @@
     <string name="data_loading_error">data loading error</string>
     <string name="contact_list_data_loading_error">data loading error in ContactList</string>
     <string name="contact_details_data_loading_error">data loading error in ContactList</string>
+    <string name="location">Местоположение</string>
+    <string name="save">Сохранить</string>
+    <string name="delete">Удалить</string>
+    <string name="searching">Searching..</string>
+    <string name="save_location">Местоположение сохранено</string>
+    <string name="delete_location">Местоположение удалено</string>
+    <string name="geocoder_error">Unable connect to Geocoder</string>
+    <string name="route_error">Невозможно построить маршрут</string>
+    <string name="route">Маршрут</string>
+    <string name="request_first_id">Введите id первого контакта</string>
+    <string name="request_second_id">Введите id второго контакта</string>
+    <string name="empty_first_id">Для построения маршрута необходимо ввести id контактов! \nВведите id для всех контактов. </string>
+    <string name="wrong_first_id">Введен неправильный id! Посмотреть id контакта можно нажав на соответсвующий пин. </string>
+    <string name="build_route">Построить маршрут</string>
+    <string name="close_route">Закрыть</string>
+    <string name="route_request">"https://maps.googleapis.com/maps/api/directions/json?origin=%1$a
+        ,%2$a&amp;destination=%3$a,%4$a&amp;key=%5$s</string>
 </resources>

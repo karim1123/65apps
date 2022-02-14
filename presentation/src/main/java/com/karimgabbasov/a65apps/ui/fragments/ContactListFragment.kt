@@ -80,6 +80,9 @@ class ContactListFragment : Fragment(), SearchView.OnQueryTextListener {
         (activity as AppCompatActivity).supportActionBar?.title =
             getString(R.string.contact_list_fragment_title)
         requestPermission()
+        binding.btnOpenRouteFragment.setOnClickListener {
+            fragmentOwner?.setRouteFragment()
+        }
     }
 
     override fun onDestroyView() {
@@ -123,14 +126,14 @@ class ContactListFragment : Fragment(), SearchView.OnQueryTextListener {
         contactListRecyclerView.addItemDecoration(SimpleOffsetDrawer(4))
         viewModelContactList
             .progressIndicatorStatus
-            .observe(viewLifecycleOwner, {
+            .observe(viewLifecycleOwner) {
                 progressIndicator.isVisible = it
-            })
+            }
         viewModelContactList
             .contactList
-            .observe(viewLifecycleOwner, {
+            .observe(viewLifecycleOwner) {
                 contactsAdapter.submitList(it)
-            })
+            }
         setHasOptionsMenu(true)
     }
 

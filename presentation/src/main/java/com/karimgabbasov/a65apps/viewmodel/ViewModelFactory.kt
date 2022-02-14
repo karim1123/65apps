@@ -11,7 +11,7 @@ class ViewModelFactory
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         val viewModelProvider = viewModels[modelClass]
-            ?: throw IllegalArgumentException("model class $modelClass not found")
+            ?: throw IllegalArgumentException("repository class $modelClass not found")
         return viewModelProvider.get() as T
     }
 }
