@@ -10,7 +10,6 @@ import dagger.multibindings.IntoMap
 
 @Module
 abstract class ContactListViewModelModule {
-
     @ContactListScope
     @Binds
     @IntoMap

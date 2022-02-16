@@ -31,6 +31,7 @@ class RouteFragment : Fragment(), OnMapReadyCallback {
     private val binding get() = _binding!!
     private var map: GoogleMap? = null
     private lateinit var viewModelRoute: RouteViewModel
+
     @Inject
     lateinit var factory: ViewModelProvider.Factory
 
@@ -111,7 +112,7 @@ class RouteFragment : Fragment(), OnMapReadyCallback {
     private fun restoreRoute() {
         val originLocation = viewModelRoute.mutableOriginLocation.value
         val destinationLocation = viewModelRoute.mutableDestinationLocation.value
-        if (originLocation != null && destinationLocation != null){
+        if (originLocation != null && destinationLocation != null) {
             drawRoute(originLocation, destinationLocation)
         }
     }

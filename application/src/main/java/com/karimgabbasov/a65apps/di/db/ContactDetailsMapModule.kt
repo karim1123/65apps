@@ -1,8 +1,8 @@
 package com.karimgabbasov.a65apps.di.db
 
+import com.karimgabbasov.a65apps.database.MapDatabase
 import com.karimgabbasov.a65apps.entity.map.MapRepository
 import com.karimgabbasov.a65apps.repository.MapRepositoryImpl
-import com.karimgabbasov.database.MapDatabase
 import dagger.Module
 import dagger.Provides
 

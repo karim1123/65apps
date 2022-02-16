@@ -2,7 +2,7 @@ package com.karimgabbasov.a65apps.di.db
 
 import android.content.Context
 import androidx.room.Room
-import com.karimgabbasov.database.MapDatabase
+import com.karimgabbasov.a65apps.database.MapDatabase
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -15,5 +15,3 @@ class DatabaseModule {
         context, MapDatabase::class.java, "Database"
     ).build()
 }
-
-

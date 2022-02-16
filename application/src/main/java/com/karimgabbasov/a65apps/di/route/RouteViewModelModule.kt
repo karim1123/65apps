@@ -16,4 +16,3 @@ abstract class RouteViewModelModule {
     @ViewModelKey(RouteViewModel::class)
     abstract fun bindRouteViewModel(viewModel: RouteViewModel): ViewModel
 }
-

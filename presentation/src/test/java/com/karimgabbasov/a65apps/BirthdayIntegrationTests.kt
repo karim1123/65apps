@@ -14,9 +14,10 @@ import io.mockk.impl.annotations.MockK
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import io.reactivex.rxjava3.schedulers.Schedulers
-import java.util.*
+import java.util.Calendar
+import java.util.GregorianCalendar
 
-class BirthdayModuleTests : DescribeSpec() {
+class BirthdayIntegrationTests : DescribeSpec() {
     @MockK
     private lateinit var alarmManagerInteractor: AlarmManagerInteractor
 

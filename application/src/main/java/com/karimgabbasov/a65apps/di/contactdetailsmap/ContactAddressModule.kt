@@ -8,7 +8,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class ContactAddressModule() {
+class ContactAddressModule {
     @ContactDetailsMapScope
     @Provides
     fun provideContactAddress(context: Context): ContactAddress = ContactAddressImpl(context)

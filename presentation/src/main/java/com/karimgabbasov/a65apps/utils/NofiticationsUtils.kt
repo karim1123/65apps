@@ -9,7 +9,7 @@ import androidx.core.app.NotificationCompat
 import com.karimgabbasov.a65apps.R
 import com.karimgabbasov.a65apps.interactors.birthday.countMills
 import com.karimgabbasov.a65apps.ui.activity.MainActivity
-import java.util.*
+import java.util.GregorianCalendar
 
 private const val ID = "id"
 
@@ -59,6 +59,3 @@ fun NotificationManager.sendBirthdayNotification(
         timeBeforeBirthdayInMills.timeInMillis, alarmIntent
     )
 }
-
-
-

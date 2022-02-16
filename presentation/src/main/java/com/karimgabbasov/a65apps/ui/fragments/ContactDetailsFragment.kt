@@ -23,7 +23,7 @@ import com.karimgabbasov.a65apps.entity.contactmodels.DetailedContactModel
 import com.karimgabbasov.a65apps.ui.FragmentOwner
 import com.karimgabbasov.a65apps.utils.checkNotificationSwitchStatusUtil
 import com.karimgabbasov.a65apps.viewmodel.ContactDetailsViewModel
-import java.util.*
+import java.util.GregorianCalendar
 import javax.inject.Inject
 
 class ContactDetailsFragment : Fragment() {
@@ -70,7 +70,7 @@ class ContactDetailsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentContactDetailBinding.inflate(inflater, container, false)
         return binding.root
@@ -82,8 +82,8 @@ class ContactDetailsFragment : Fragment() {
         binding.switchNotification.checkNotificationSwitchStatusUtil(
             requireContext(),
             contactId
-        )//проверка состояния switch
-        binding.switchNotification.setOnClickListener { //обработка нажатий switch
+        ) // проверка состояния switch
+        binding.switchNotification.setOnClickListener { // обработка нажатий switch
             if (contactBirthday != EMPTY_BIRTHDAY) {
                 viewModelContactDetails.changeNotifyStatus(
                     binding.switchNotification.isChecked,
@@ -160,4 +160,3 @@ class ContactDetailsFragment : Fragment() {
             }
     }
 }
-

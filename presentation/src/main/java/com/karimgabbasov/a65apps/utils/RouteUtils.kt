@@ -6,7 +6,7 @@ interface RouteUtils {
     fun getPolylines(
         originLocation: LatLng,
         destinationLocation: LatLng,
-        apiKey: String,
+        apiKey: String
     ): ArrayList<List<LatLng>>
 
     fun getDirectionURL(origin: LatLng, dest: LatLng, secret: String): String

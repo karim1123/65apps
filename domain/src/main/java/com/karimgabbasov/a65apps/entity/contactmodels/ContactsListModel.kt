@@ -6,4 +6,3 @@ data class ContactsListModel(
     val number: String,
     val image: String?
 )
-
